@@ -11,6 +11,7 @@ yellow = (255, 255, 0)
 gameDisplay = pygame.display.set_mode((800,600))
 list_Enemies = []
 shots_moving = []
+list_allowed_space = [20,70,120,170,220,270,320,370,420,470,520,570,620,670,720,770]
 font = pygame.font.SysFont(None, 25)
 
   
@@ -19,7 +20,7 @@ def maingame():
   shots_moving.clear()
   x_cord = 67
   y_cord = 540 
-  enemy_cord_x = random.randint(50, 750)
+  enemy_cord_x = random.choice(list_allowed_space)
   enemy_cord_y = 20
   list_Enemies.append([enemy_cord_x, enemy_cord_y])
   gameExit = False 
@@ -30,22 +31,26 @@ def maingame():
       if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           gameExit = True
-        if event.key == pygame.K_LEFT and x_cord > 50:
+        elif event.key == pygame.K_LEFT and x_cord > 50:
            x_cord = x_cord - 50
            moveMent(x_cord, y_cord, 10, black)
-        if event.key == pygame.K_RIGHT and x_cord < 750:
+        elif event.key == pygame.K_RIGHT and x_cord < 750:
             x_cord = x_cord + 50
             moveMent(x_cord, y_cord, 10, black)
-        if event.key == pygame.K_SPACE:
+        elif event.key == pygame.K_SPACE:
             fireShot(x_cord, y_cord, 2)
             shots_moving.append([x_cord, y_cord])
-        if event.key == pygame.K_e:
-          list_Enemies.append([random.randint(50,750), enemy_cord_y])
+        elif event.key == pygame.K_e:
+          list_Enemies.append([(random.choice(list_allowed_space)), enemy_cord_y])
+      elif event.type == pygame.MOUSEBUTTONDOWN:
+        print(event)
     gameDisplay.fill(white)
     clock.tick(30)
 
     for i in shots_moving:
       i[1] -= 3.6
+      if i[1] < 0:
+        shots_moving.remove(i)
     check_if_hit()
 
     moveMent(x_cord, y_cord, 10, black)
@@ -56,7 +61,6 @@ def maingame():
       if i[0] > x_cord and i[0] < x_cord +15 or i[0] + 10 > x_cord and i[0] + 10 < x_cord + 15:
         if i[1] > y_cord and i[1] < y_cord + 15 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 15:
           gameExit = gameOver()
-
         if i[1]> 650:
           list_Enemies.remove(i)
 #          gameExit = gameOver()
@@ -64,7 +68,6 @@ def maingame():
 def check_if_hit():
   for i in list_Enemies:
     for e in shots_moving:
-        e[1] -= 3.6
         if i[0] > e[0] and i[0] < e[0] +15 or i[0] + 10 > e[0] and i[0] + 10 < e[0] + 15:
           if i[1] > e[1] and i[1] < e[1] + 15 or i[1]+10 > e[1] and i[1] + 10 < e[1]+ 15:
             list_Enemies.remove((i))
