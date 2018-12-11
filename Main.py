@@ -18,6 +18,7 @@ def maingame():
   y_cord = 540 
   enemy_cord_x = random.randint(50, 750)
   enemy_cord_y = 20
+
   list_Enemies.append([enemy_cord_x, enemy_cord_y])
   gameExit = False 
   gameDisplay.fill(white)
@@ -47,7 +48,16 @@ def maingame():
 
     moveMent(x_cord, y_cord, 10, black)
     pygame.display.update()
-  
+
+def detectCollision(enemies, shots):
+    enemies = list_Enemies
+    shots = shots_moving
+    for x in list_Enemies:
+        for y in shots_moving:
+          if x == y:
+            result = 1
+            return result
+      
 def moveMent(x, y, size, color):
     pygame.draw.rect(gameDisplay, color, [x,y,size,size])
     displayEnemies(list_Enemies)
@@ -58,8 +68,8 @@ def fireShot(startPos, endPos, w):
     #pygame.draw.line(gameDisplay, black, (startPos, startPos), (endPos, endPos), w)
     pygame.draw.circle(gameDisplay, yellow, [startPos + 5, endPos - 10], 4 )
     displayShots(shots_moving)
-    
-
+    if(detectCollision(list_Enemies, shots_moving)):
+        print("lol")
     pygame.display.update()
 
 def displayShots(lisMoving):
