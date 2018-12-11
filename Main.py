@@ -33,6 +33,8 @@ def maingame():
         if event.key == pygame.K_RIGHT and x_cord < 750:
             x_cord = x_cord + 50
             moveMent(x_cord, y_cord, 10, black)
+        if event.key == pygame.K_SPACE:
+            fireShot(20, 2, 3)
     gameDisplay.fill(white)
     clock.tick(30)
     for i in list_Enemies:
@@ -44,6 +46,11 @@ def moveMent(x, y, size, color):
     pygame.draw.rect(gameDisplay, color, [x,y,size,size])
     displayEnemies(list_Enemies)
     pygame.display.update()
+
+def fireShot(startPos, endPos, w):
+    pygame.draw.line(gameDisplay, black, startPos, endPos, w)
+    pygame.display.update()
+
 
 def displayEnemies(lisEnemies):
     for i in lisEnemies:
