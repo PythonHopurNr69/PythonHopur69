@@ -33,6 +33,3 @@ def moveMent(x, y, size):
     pygame.display.update()
   
 maingame()
-
-
-    
