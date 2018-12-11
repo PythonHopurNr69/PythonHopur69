@@ -45,7 +45,8 @@ def maingame():
     clock.tick(30)
 
     for i in shots_moving:
-        i[1] -= 3.6
+      i[1] -= 3.6
+    check_if_hit()
 
     moveMent(x_cord, y_cord, 10, black)
     pygame.display.update()
@@ -56,8 +57,18 @@ def maingame():
         if i[1] > y_cord and i[1] < y_cord + 15 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 15:
           gameExit = gameOver()
 
-#        if i[1]> 650:
+        if i[1]> 650:
+          list_Enemies.remove(i)
 #          gameExit = gameOver()
+
+def check_if_hit():
+  for i in list_Enemies:
+    for e in shots_moving:
+        e[1] -= 3.6
+        if i[0] > e[0] and i[0] < e[0] +15 or i[0] + 10 > e[0] and i[0] + 10 < e[0] + 15:
+          if i[1] > e[1] and i[1] < e[1] + 15 or i[1]+10 > e[1] and i[1] + 10 < e[1]+ 15:
+            list_Enemies.remove((i))
+
 
 def detectCollision(enemies, shots):
     enemies = list_Enemies
