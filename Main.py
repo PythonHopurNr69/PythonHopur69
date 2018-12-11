@@ -27,7 +27,6 @@ def maingame():
   pygame.display.update()
   while gameExit == False:
     for event in pygame.event.get():
-      print(event)
       if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           gameExit = True
@@ -40,6 +39,8 @@ def maingame():
         if event.key == pygame.K_SPACE:
             fireShot(x_cord, y_cord, 2)
             shots_moving.append([x_cord, y_cord])
+        if event.key == pygame.K_e:
+          list_Enemies.append([random.randint(50,750), enemy_cord_y])
     gameDisplay.fill(white)
     clock.tick(30)
 
@@ -48,10 +49,15 @@ def maingame():
 
     moveMent(x_cord, y_cord, 10, black)
     pygame.display.update()
+
     for i in list_Enemies:
-        i[1] += 10
-        if i[1]> 650:
+      i[1] += 2.5
+      if i[0] > x_cord and i[0] < x_cord +15 or i[0] + 10 > x_cord and i[0] + 10 < x_cord + 15:
+        if i[1] > y_cord and i[1] < y_cord + 15 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 15:
           gameExit = gameOver()
+
+#        if i[1]> 650:
+#          gameExit = gameOver()
 
 def detectCollision(enemies, shots):
     enemies = list_Enemies
