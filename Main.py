@@ -29,7 +29,8 @@ def maingame():
   list_Enemies.append([enemy_cord_x, enemy_cord_y])
   gameExit = False 
   gameDisplay.fill(white)
-  
+  global points
+  points = 0
   pygame.display.update()
   while gameExit == False:
     for event in pygame.event.get():
