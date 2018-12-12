@@ -8,7 +8,9 @@ white = (255,255,255)
 black = (0,0,0)
 red = (255,0,0)
 yellow = (255, 255, 0)
-gameDisplay = pygame.display.set_mode((800,600))
+display_width = 800
+display_height = 600
+gameDisplay = pygame.display.set_mode((display_width,display_height))
 list_Enemies = []
 shots_moving = []
 list_allowed_space = [20,70,120,170,220,270,320,370,420,470,520,570,620,670,720,770]
@@ -71,6 +73,7 @@ def check_if_hit():
         if i[0] > e[0] and i[0] < e[0] +15 or i[0] + 10 > e[0] and i[0] + 10 < e[0] + 15:
           if i[1] > e[1] and i[1] < e[1] + 15 or i[1]+10 > e[1] and i[1] + 10 < e[1]+ 15:
             list_Enemies.remove((i))
+            shots_moving.remove(e)
 
 
 def detectCollision(enemies, shots):
