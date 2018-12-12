@@ -6,5 +6,3 @@ cx_Freeze.setup(
     name="blockfudger",
     options={"build_exe": {"packages":["pygame"]}},
     executables = executables
-
-    )

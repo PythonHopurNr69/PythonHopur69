@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import scores as HScores
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -94,8 +95,17 @@ def mainMenu():
       if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           return pygame.quit()
+        if event.key == pygame.K_2:
+          print(displayHighScores())
         if event.key == pygame.K_1:
           return maingame()
+
+def displayHighScores():
+    highscores = HScores.load()
+    for y, (hi_name, hi_score) in enumerate(highscores):
+        FONT.render_to(screen, (100, y*30+40), f'{hi_name} {hi_score}', BLUE)
+    gameDisplay.fill((30, 30, 50))
+
 
 def check_if_hit():
   for i in list_Enemies:
@@ -135,7 +145,7 @@ def gameOver():
           maingame()
           return True
         elif event.key == pygame.K_n:
-          menuScreen()
+          mainMenu()
           return True
 
 def messageToScreen(msg):
