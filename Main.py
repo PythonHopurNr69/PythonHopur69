@@ -10,18 +10,53 @@ red = (255,0,0)
 yellow = (255, 255, 0)
 display_width = 800
 display_height = 600
-gameDisplay = pygame.display.set_mode((display_width,display_height))
+jump_movement = 50
+
 list_Enemies = []
 shots_moving = []
-list_allowed_space = [20,70,120,170,220,270,320,370,420,470,520,570,620,670,720,770]
+list_allowed_space = []
 font = pygame.font.SysFont(None, 25)
+
+def initialize(display_widt,display_heigh):
+  display = pygame.display.set_mode((display_widt,display_heigh))
+  display.fill(white)
+  message = font.render('what display would you like?',True, red)
+  display.blit(message,[400,100])
+  message = font.render('(1) 700,900',True, red)
+  display.blit(message,[400,200])
+  message = font.render('(2) 600,700',True, red)
+  display.blit(message,[400,250])
+  message = font.render('(3) 400,700',True, red)
+  display.blit(message,[400,300])
+  message = font.render('(4) 300,200',True, red)
+  display.blit(message,[400,350])
+  pygame.display.update()
+  global display_height
+  global display_width
+  while 1:
+    for event in pygame.event.get():
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_1:
+          display_height = 300
+          display_width = 400
+          pygame.display.quit()
+          return 
+        if event.key == pygame.K_2:
+          display_height = 1
+
+initialize(display_width,display_height)
+
+gameDisplay = pygame.display.set_mode((display_width,display_height))
 
   
 def maingame():
+  print(display_height,display_width)
+  for i in range (int(display_height/40),display_width, jump_movement):
+    list_allowed_space.append(i)
   list_Enemies.clear()
   shots_moving.clear()
   x_cord = 67
-  y_cord = 540 
+  y_cord = int(display_height - (display_height/10)) 
   enemy_cord_x = random.choice(list_allowed_space)
   enemy_cord_y = 20
   list_Enemies.append([enemy_cord_x, enemy_cord_y])
@@ -33,11 +68,11 @@ def maingame():
       if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           gameExit = True
-        elif event.key == pygame.K_LEFT and x_cord > 50:
-           x_cord = x_cord - 50
+        elif event.key == pygame.K_LEFT and x_cord > jump_movement:
+           x_cord = x_cord - jump_movement
            moveMent(x_cord, y_cord, 10, black)
-        elif event.key == pygame.K_RIGHT and x_cord < 750:
-            x_cord = x_cord + 50
+        elif event.key == pygame.K_RIGHT and x_cord < int(display_width-jump_movement):
+            x_cord = x_cord + jump_movement
             moveMent(x_cord, y_cord, 10, black)
         elif event.key == pygame.K_SPACE:
             fireShot(x_cord, y_cord, 2)
@@ -57,15 +92,14 @@ def maingame():
 
     moveMent(x_cord, y_cord, 10, black)
     pygame.display.update()
-
     for i in list_Enemies:
       i[1] += 2.5
-      if i[0] > x_cord and i[0] < x_cord +15 or i[0] + 10 > x_cord and i[0] + 10 < x_cord + 15:
-        if i[1] > y_cord and i[1] < y_cord + 15 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 15:
+      if i[0] > x_cord and i[0] < x_cord +20 or i[0] + 10 > x_cord and i[0] + 10 < x_cord + 20:
+        if i[1] > y_cord and i[1] < y_cord + 20 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 20:
           gameExit = gameOver()
-        if i[1]> 650:
-          list_Enemies.remove(i)
-#          gameExit = gameOver()
+      if i[1]> display_height:
+        list_Enemies.remove(i)
+        gameExit = gameOver()
 
 def check_if_hit():
   for i in list_Enemies:
@@ -121,7 +155,7 @@ def gameOver():
 
 def messageToScreen(msg):
   message = font.render(msg,True, red)
-  gameDisplay.blit(message,[400,300])
+  gameDisplay.blit(message,[display_height/4,display_width/2])
 
 
 
