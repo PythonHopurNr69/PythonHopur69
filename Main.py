@@ -1,6 +1,7 @@
 import pygame
 import random
 import time
+import scores as HScores
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -16,6 +17,8 @@ timer = 1000
 lvl_up = 20
 lvl = 1
 shot_speed = 3.5
+menuDisplay = pygame.display.set_mode((display_width,display_height))
+gameDisplay = pygame.display.set_mode((display_width,display_height))
 list_Enemies = []
 shots_moving = []
 list_allowed_space = []
@@ -59,6 +62,9 @@ def maingame():
   print(display_height,display_width)
   for i in range (int(display_height/40),display_width, jump_movement):
     list_allowed_space.append(i)
+  
+def maingame():
+  
   list_Enemies.clear()
   shots_moving.clear()
   x_cord = 67
@@ -112,6 +118,39 @@ def maingame():
         list_Enemies.remove(i)
         gameExit = gameOver()
 
+def mainMenu():
+  menuDisplay.fill(black)
+
+  TitleMessage = font.render("BLOOOCKFUUUDGER", True, red)
+  gameDisplay.blit(TitleMessage, [600,100],)
+
+  StartMessage = font.render("1 --- StartGame", True, red)
+  gameDisplay.blit(StartMessage, [600,300])
+
+  HighScore = font.render("2 --- HighScore", True, red)
+  gameDisplay.blit(HighScore, [600,400])
+  
+  ExitMessage = font.render("q --- Exit program", True, red)
+  gameDisplay.blit(ExitMessage, [600, 500])
+  pygame.display.update()
+  while 1:
+    for event in pygame.event.get():
+      print(event)
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_q:
+          return pygame.quit()
+        if event.key == pygame.K_2:
+          print(displayHighScores())
+        if event.key == pygame.K_1:
+          return maingame()
+
+def displayHighScores():
+    highscores = HScores.load()
+    for y, (hi_name, hi_score) in enumerate(highscores):
+        FONT.render_to(screen, (100, y*30+40), f'{hi_name} {hi_score}', BLUE)
+    gameDisplay.fill((30, 30, 50))
+
+
 def check_if_hit():
   for i in list_Enemies:
     for e in shots_moving:
@@ -134,7 +173,6 @@ def moveMent(x, y, size, color):
     pygame.display.update()
 
 def fireShot(startPos, endPos, w):
-    #pygame.draw.line(gameDisplay, black, (startPos, startPos), (endPos, endPos), w)
     pygame.draw.circle(gameDisplay, yellow, [startPos + 5, endPos - 10],  10)
     displayShots(shots_moving)
     pygame.display.update()
@@ -156,6 +194,7 @@ def gameOver():
           maingame()
           return True
         elif event.key == pygame.K_n:
+          mainMenu()
           return True
 
 def messageToScreen(msg):
@@ -184,7 +223,7 @@ def raisePoints():
       shot_speed += 1
       pygame.time.set_timer(spawn_enemy, timer)
 
-maingame()
+mainMenu()
 
 
     
