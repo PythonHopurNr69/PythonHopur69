@@ -57,13 +57,13 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 
 pygame.time.set_timer(spawn_enemy, timer)
   
+  
 def maingame():
+
   timer = 250
   print(display_height,display_width)
   for i in range (int(display_height/40),display_width, jump_movement):
     list_allowed_space.append(i)
-  
-def maingame():
   
   list_Enemies.clear()
   shots_moving.clear()
@@ -116,7 +116,7 @@ def maingame():
           gameExit = gameOver()
       if i[1]> display_height:
         list_Enemies.remove(i)
-        gameExit = gameOver()
+        #gameExit = gameOver()
 
 def mainMenu():
   menuDisplay.fill(black)
