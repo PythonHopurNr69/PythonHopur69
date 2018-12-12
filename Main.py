@@ -1,7 +1,10 @@
 import pygame
 import random
 import time
-import scores as HScores
+from tkinter import *
+import tkinter.messagebox
+from score_repo import HighScores
+
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -23,6 +26,7 @@ list_Enemies = []
 shots_moving = []
 list_allowed_space = []
 font = pygame.font.SysFont(None, 25)
+_highscores = HighScores()
 
 #def initialize(display_widt,display_heigh):
 #  display = pygame.display.set_mode((display_widt,display_heigh))
@@ -140,16 +144,49 @@ def mainMenu():
         if event.key == pygame.K_q:
           return pygame.quit()
         if event.key == pygame.K_2:
-          print(displayHighScores())
+          return(displayHighScores())
         if event.key == pygame.K_1:
           return maingame()
 
 def displayHighScores():
-    highscores = HScores.load()
-    for y, (hi_name, hi_score) in enumerate(highscores):
-        FONT.render_to(screen, (100, y*30+40), f'{hi_name} {hi_score}', BLUE)
-    gameDisplay.fill((30, 30, 50))
-
+  window = Tk()
+  disp_scores = StringVar()
+  window.title("HighScores")
+  window.configure(background='pink')
+  Frame(width=500, height=500, background='pink').pack()
+  for score in _highscores.get_scores():
+      tmp = disp_scores.get()
+      tmp += '\n' + score
+      disp_scores.set(tmp)
+  the_jokes = Label(textvariable=disp_scores, anchor='w', justify='left', wraplength=500, background='pink')
+  the_jokes.pack()
+  the_jokes.place(y=0)
+  window.mainloop()
+  mainMenu()  
+  
+    
+def saveHighScores():
+  window = Tk()
+  disp_scores = StringVar()
+  window.title("HighScores")
+  window.configure(background='pink')
+  Frame(width=500, height=500, background='pink').pack()
+  
+  entry = Entry()
+  disp_scores = StringVar()
+  newHighScore = entry.get()
+  global points
+  if newHighScore and _highscores.add_score(newHighScore):
+      tmp = disp_scores.get()
+      tmp += '\n' + newHighScore + '' + points
+      disp_scores.set(tmp)
+  else:
+      tkinter.messagebox.showinfo('Error, could not add scores')
+  
+  entry.pack(fill=X)
+  Button(text='Submit name', command=saveHighScores, background='green').pack()
+  window.mainloop()  
+  
 
 def check_if_hit():
   for i in list_Enemies:
@@ -194,8 +231,10 @@ def gameOver():
           maingame()
           return True
         elif event.key == pygame.K_n:
+          saveHighScores()
           mainMenu()
           return True
+
 
 def messageToScreen(msg):
   message = font.render(msg,True, red)
