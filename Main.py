@@ -10,6 +10,7 @@ red = (255,0,0)
 yellow = (255, 255, 0)
 display_width = 800
 display_height = 600
+menuDisplay = pygame.display.set_mode((display_width,display_height))
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 list_Enemies = []
 shots_moving = []
@@ -17,9 +18,9 @@ points = 0
 
 list_allowed_space = [20,70,120,170,220,270,320,370,420,470,520,570,620,670,720,770]
 font = pygame.font.SysFont(None, 25)
-
   
 def maingame():
+  
   list_Enemies.clear()
   shots_moving.clear()
   x_cord = 67
@@ -72,6 +73,30 @@ def maingame():
           list_Enemies.remove(i)
 #          gameExit = gameOver()
 
+def mainMenu():
+  menuDisplay.fill(black)
+
+  TitleMessage = font.render("BLOOOCKFUUUDGER", True, red)
+  gameDisplay.blit(TitleMessage, [600,100],)
+
+  StartMessage = font.render("1 --- StartGame", True, red)
+  gameDisplay.blit(StartMessage, [600,300])
+
+  HighScore = font.render("2 --- HighScore", True, red)
+  gameDisplay.blit(HighScore, [600,400])
+  
+  ExitMessage = font.render("q --- Exit program", True, red)
+  gameDisplay.blit(ExitMessage, [600, 500])
+  pygame.display.update()
+  while 1:
+    for event in pygame.event.get():
+      print(event)
+      if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_q:
+          return pygame.quit()
+        if event.key == pygame.K_1:
+          return maingame()
+
 def check_if_hit():
   for i in list_Enemies:
     for e in shots_moving:
@@ -80,10 +105,7 @@ def check_if_hit():
             list_Enemies.remove((i))
             shots_moving.remove(e)
             raisePoints()
-
-
-
-      
+     
 def moveMent(x, y, size, color):
     pygame.draw.rect(gameDisplay, color, [x,y,size,size])
     displayEnemies(list_Enemies)
@@ -91,7 +113,6 @@ def moveMent(x, y, size, color):
     pygame.display.update()
 
 def fireShot(startPos, endPos, w):
-    #pygame.draw.line(gameDisplay, black, (startPos, startPos), (endPos, endPos), w)
     pygame.draw.circle(gameDisplay, yellow, [startPos + 5, endPos - 10],  10)
     displayShots(shots_moving)
     pygame.display.update()
@@ -114,10 +135,11 @@ def gameOver():
           maingame()
           return True
         elif event.key == pygame.K_n:
+          menuScreen()
           return True
 
 def messageToScreen(msg):
-  message = font.render(msg,True, red)
+  message = font.render(msg,True, black)
   gameDisplay.blit(message,[400,300])
 
 def displayPoints(points):
@@ -128,7 +150,7 @@ def raisePoints():
     global points
     points = points + 1
 
-maingame()
+mainMenu()
 
 
     
