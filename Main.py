@@ -13,6 +13,8 @@ display_height = 600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 list_Enemies = []
 shots_moving = []
+points = 0
+
 list_allowed_space = [20,70,120,170,220,270,320,370,420,470,520,570,620,670,720,770]
 font = pygame.font.SysFont(None, 25)
 
@@ -27,6 +29,7 @@ def maingame():
   list_Enemies.append([enemy_cord_x, enemy_cord_y])
   gameExit = False 
   gameDisplay.fill(white)
+  
   pygame.display.update()
   while gameExit == False:
     for event in pygame.event.get():
@@ -56,6 +59,7 @@ def maingame():
     check_if_hit()
 
     moveMent(x_cord, y_cord, 10, black)
+    displayPoints(points)
     pygame.display.update()
 
     for i in list_Enemies:
@@ -74,16 +78,10 @@ def check_if_hit():
           if i[1] > e[1] and i[1] < e[1] + 15 or i[1]+10 > e[1] and i[1] + 10 < e[1]+ 15:
             list_Enemies.remove((i))
             shots_moving.remove(e)
+            raisePoints()
 
 
-def detectCollision(enemies, shots):
-    enemies = list_Enemies
-    shots = shots_moving
-    for x in list_Enemies:
-        for y in shots_moving:
-          if x == y:
-            result = 1
-            return result
+
       
 def moveMent(x, y, size, color):
     pygame.draw.rect(gameDisplay, color, [x,y,size,size])
@@ -93,10 +91,8 @@ def moveMent(x, y, size, color):
 
 def fireShot(startPos, endPos, w):
     #pygame.draw.line(gameDisplay, black, (startPos, startPos), (endPos, endPos), w)
-    pygame.draw.circle(gameDisplay, yellow, [startPos + 5, endPos - 10], 4 )
+    pygame.draw.circle(gameDisplay, yellow, [startPos + 5, endPos - 10],  10)
     displayShots(shots_moving)
-    if(detectCollision(list_Enemies, shots_moving)):
-        print("lol")
     pygame.display.update()
 
 def displayShots(lisMoving):
@@ -123,7 +119,13 @@ def messageToScreen(msg):
   message = font.render(msg,True, red)
   gameDisplay.blit(message,[400,300])
 
+def displayPoints(points):
+    scoreboard = font.render("Score {0}".format(points), 1, (0,0,0))
+    gameDisplay.blit(scoreboard, (5, 10))
 
+def raisePoints():
+    global points
+    points = points + 1
 
 maingame()
 
