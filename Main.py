@@ -27,6 +27,7 @@ shots_moving = []
 list_allowed_space = []
 font = pygame.font.SysFont(None, 25)
 _highscores = HighScores()
+entry = Entry()
 
 #def initialize(display_widt,display_heigh):
 #  display = pygame.display.set_mode((display_widt,display_heigh))
@@ -166,26 +167,33 @@ def displayHighScores():
   
     
 def saveHighScores():
-  window = Tk()
-  disp_scores = StringVar()
-  window.title("HighScores")
-  window.configure(background='pink')
-  Frame(width=500, height=500, background='pink').pack()
+  root = Tk()
+  root.geometry("200x100")
+  #textBox=Text(root, height=2, width=10)
+  #inputVal = textBox.get("1.0")
+  #textBox.pack()
+  #global points
+  #buttonCommit = Button(root, height=1, width=1, text="commit",
+                  #command=lambda: _highscores.add_score(inputVal))
+  #buttonCommit.pack()
   
-  entry = Entry()
+  Button(text='Submit name', command=commitHighScores, background='green').pack()
+  entry.pack(fill=X)
+  mainloop()
+
+
+def commitHighScores():
   disp_scores = StringVar()
-  newHighScore = entry.get()
   global points
+  newHighScore = entry.get()
+
   if newHighScore and _highscores.add_score(newHighScore):
       tmp = disp_scores.get()
-      tmp += '\n' + newHighScore + '' + points
+      tmp += '\n' + newHighScore
       disp_scores.set(tmp)
   else:
       tkinter.messagebox.showinfo('Error, could not add scores')
-  
-  entry.pack(fill=X)
-  Button(text='Submit name', command=saveHighScores, background='green').pack()
-  window.mainloop()  
+
   
 
 def check_if_hit():
