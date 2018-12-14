@@ -16,4 +16,3 @@
 #sorry for the inconvenience but this can happen in vscode
 
 #if you want to run our game in the terminal after you have installed pygame, you can doubble click the "Main.ba" text file in the directory or run "Main.ba" in terminal. (apperantly IDLE and pygame don't work well together )
-

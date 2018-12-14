@@ -142,7 +142,6 @@ def maingame():
     check_if_hit()
     #and in the end displays the movement 
     moveMent(x_cord, y_cord, 10, black)
-#        gameExit = gameOver()
 
 #our main menu
 def mainMenu():
@@ -177,24 +176,26 @@ def mainMenu():
           how_to_play()
 
 
-#this displayes the insturctions on how to play 
+#this displays the insturctions on how to play 
 def how_to_play():
   message = font.render('in this game you play as a black box and your goal is to shoot the red boxes for points',True, red)
   gameDisplay.blit(message,[display_height/4,display_width/2])
 
+#Function that calls to the GUI to display HighScores
 def displayHighScores():
   param = 1
   global points
   gui.guiApplicaton(param, points)
   mainMenu()  
   
-    
+#Function that calls to the GUI to save the HighScores
 def saveHighScores():
   param = 0
   global points
   gui.guiApplicaton(param, points)
   mainMenu()
 
+#Check if hit, loop through the list of enemies and see if it's a hit or not
 def check_if_hit():
   for i in list_Enemies:
     for e in shots_moving:
@@ -286,4 +287,5 @@ def raisePoints():
       enemy_speed += 1
       pygame.time.set_timer(spawn_enemy, timer)
 
+#Call to the MainMenu
 mainMenu()

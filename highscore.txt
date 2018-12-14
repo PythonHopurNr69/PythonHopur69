@@ -1,2 +1,15 @@
 name:  Score: 3
 name: stebbi Score: 2
+name: John Score: 18
+name:  Score: 0
+name: ss Score: 0
+name: John Score: 0
+name: Bob! Score: 0
+name: bb Score: 3
+name: bb Score: 1
+name: bb Score: 0
+name: ss Score: 0
+name: sss Score: 0
+name: hh Score: 0
+name: James Score: 0
+name: ssss Score: 4
