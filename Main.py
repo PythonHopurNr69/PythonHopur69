@@ -17,6 +17,7 @@ timer = 1000
 lvl_up = 20
 lvl = 1
 shot_speed = 3.5
+enemy_speed = 2.5
 menuDisplay = pygame.display.set_mode((display_width,display_height))
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 list_Enemies = []
@@ -24,49 +25,31 @@ shots_moving = []
 list_allowed_space = []
 font = pygame.font.SysFont(None, 25)
 
-#def initialize(display_widt,display_heigh):
-#  display = pygame.display.set_mode((display_widt,display_heigh))
-#  display.fill(white)
-#  message = font.render('what display would you like?',True, red)
-#  display.blit(message,[400,100])
-#  message = font.render('(1) 800 , 600',True, red)
-#  display.blit(message,[400,200])
-#  message = font.render('(2) 600,700',True, red)
-#  display.blit(message,[400,250])
-#  message = font.render('(3) 400,700',True, red)
-#  display.blit(message,[400,300])
-#  message = font.render('(4) 300,200',True, red)
-#  display.blit(message,[400,350])
-#  pygame.display.update()
-#  global display_height
-#  global display_width
-#  while 1:
-#    for event in pygame.event.get():
-#      if event.type == pygame.KEYDOWN:
-#        if event.key == pygame.K_1:
-#          display_height = 600
-#          display_width = 800
-#          pygame.display.quit()
-#          return 
-#        if event.key == pygame.K_2:
-#          display_height = 1
-
-#initialize(display_width,display_height)
+def initialize():
+  global timer
+  global list_Enemies
+  global shot_speed
+  global enemy_speed
+  global lvl 
+  global lvl_up
+  lvl_up = 20
+  lvl = 1 
+  timer = 1000
+  shot_speed = 3.5
+  enemy_speed =2.5
+  list_Enemies.clear()
+  shots_moving.clear()
+  for i in range(int(display_height/40),display_width, jump_movement):
+    list_allowed_space.append(i)
+  clock.tick()
+  pygame.time.set_timer(spawn_enemy, timer)
 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 
-pygame.time.set_timer(spawn_enemy, timer)
+pygame.time.set_timer(pygame.USEREVENT +1, timer)
   
 def maingame():
-  timer = 250
-  print(display_height,display_width)
-  for i in range (int(display_height/40),display_width, jump_movement):
-    list_allowed_space.append(i)
-  
-def maingame():
-  
-  list_Enemies.clear()
-  shots_moving.clear()
+  initialize()
   x_cord = 67
   y_cord = int(display_height - (display_height/10)) 
   enemy_cord_x = random.choice(list_allowed_space)
@@ -105,24 +88,27 @@ def maingame():
       if i[1] < 0:
         shots_moving.remove(i)
     check_if_hit()
-
-    moveMent(x_cord, y_cord, 10, black)
     displayPoints(points)
-    pygame.display.update()
     for i in list_Enemies:
-      i[1] += 2.5
+      i[1] += enemy_speed
       if i[0] > x_cord and i[0] < x_cord +20 or i[0] + 10 > x_cord and i[0] + 10 < x_cord + 20:
         if i[1] > y_cord and i[1] < y_cord + 20 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 20:
           gameExit = gameOver()
       if i[1]> display_height:
-        list_Enemies.remove(i)
-        gameExit = gameOver()
+        if i in list_Enemies:
+          list_Enemies.remove(i)
+    check_if_hit()
+    moveMent(x_cord, y_cord, 10, black)
+#        gameExit = gameOver()
 
 def mainMenu():
   menuDisplay.fill(black)
 
   TitleMessage = font.render("BLOOOCKFUUUDGER", True, red)
   gameDisplay.blit(TitleMessage, [600,100],)
+
+  TitleMessage = font.render("3 --- HOW TO PLAY", True, red)
+  gameDisplay.blit(TitleMessage, [600,200],)
 
   StartMessage = font.render("1 --- StartGame", True, red)
   gameDisplay.blit(StartMessage, [600,300])
@@ -139,11 +125,15 @@ def mainMenu():
       if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_q:
           return pygame.quit()
-        if event.key == pygame.K_2:
+        elif event.key == pygame.K_2:
           print(displayHighScores())
-        if event.key == pygame.K_1:
+        elif event.key == pygame.K_1:
           return maingame()
-
+        elif event.key == pygame.K_3:
+          how_to_play()
+def how_to_play():
+  message = font.render('in this game you play as a black box and your goal is to shoot the red boxes for points',True, red)
+  gameDisplay.blit(message,[display_height/4,display_width/2])
 def displayHighScores():
     highscores = HScores.load()
     for y, (hi_name, hi_score) in enumerate(highscores):
@@ -156,21 +146,20 @@ def check_if_hit():
     for e in shots_moving:
         if i[0] > e[0] and i[0] < e[0] +15 or i[0] + 10 > e[0] and i[0] + 10 < e[0] + 15:
           if i[1] > e[1] and i[1] < e[1] + 15 or i[1]+10 > e[1] and i[1] + 10 < e[1]+ 15:
-            list_Enemies.remove((i))
+            list_Enemies.remove(i)
             shots_moving.remove(e)
             raisePoints()
 
 def add_enemy():
-  list_Enemies.append([random.choice(list_allowed_space),67])
-
-
-
+  list_Enemies.append([random.choice(list_allowed_space),0])
       
 def moveMent(x, y, size, color):
-    pygame.draw.rect(gameDisplay, color, [x,y,size,size])
-    displayEnemies(list_Enemies)
-    displayShots(shots_moving)
-    pygame.display.update()
+  gameDisplay.fill(white)
+  displayPoints(points)
+  pygame.draw.rect(gameDisplay, color, [x,y,size,size])
+  displayEnemies(list_Enemies)
+  displayShots(shots_moving)
+  pygame.display.update()
 
 def fireShot(startPos, endPos, w):
     pygame.draw.circle(gameDisplay, yellow, [startPos + 5, endPos - 10],  10)
@@ -186,7 +175,7 @@ def displayEnemies(lisEnemies):
         pygame.draw.rect(gameDisplay, red, [i[0], i[1], 20, 20])
 
 def gameOver():
-  messageToScreen('YOU LOSE!, PLAY AGAIN? (Y/N)')
+#  messageToScreen('YOU LOSE!, PLAY AGAIN? (Y/N)')
   while 1:
     for event in pygame.event.get():
       if event.type == pygame.KEYDOWN:
@@ -203,7 +192,7 @@ def messageToScreen(msg):
   pygame.display.update()
 
 def displayPoints(points):
-  scoreboard = font.render("Score {0}".format(points), 1, (0,0,0))
+  scoreboard = font.render("Score {0}".format(points) + " lvl: " + str(lvl), 1, (0,0,0))
   gameDisplay.blit(scoreboard, (5, 10))
 
 
@@ -213,17 +202,21 @@ def raisePoints():
     global timer
     global lvl_up
     global shot_speed
+    global enemy_speed
     points = points + 1
     if points > lvl_up:
       lvl += 1
-      timer -= 100
+      if timer > 600:
+        timer -= 200
+      elif timer > 100:
+        timer -=100
+      else:
+        timer = (int(timer/2))+1
+      if lvl == 10:
+        enemy_speed =2.5
       lvl_up += 20
-      messageToScreen('LVL ' + str(lvl))
-      time.sleep(1)
-      shot_speed += 1
+      shot_speed += 2
+      enemy_speed += 1
       pygame.time.set_timer(spawn_enemy, timer)
 
 mainMenu()
-
-
-    
