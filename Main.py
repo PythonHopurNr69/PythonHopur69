@@ -77,6 +77,7 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 
 #our game loop
 def maingame():
+  
   initialize()
   x_cord = 67
   y_cord = int(display_height - (display_height/10)) 
@@ -86,7 +87,9 @@ def maingame():
   gameExit = False 
   gameDisplay.fill(white)
   pygame.display.update()
-
+  
+  #Play song
+  pygame.mixer.music.play(0)
   #game loop starst
   while gameExit == False:
 
@@ -145,6 +148,9 @@ def maingame():
 
 #our main menu
 def mainMenu():
+  # lol.wav -- music made in SonicPi
+  pygame.mixer.music.load('lol.wav')
+  
   menuDisplay.fill(black)
 
   TitleMessage = font.render("BLOOOCKFUUUDGER", True, red)
@@ -236,8 +242,11 @@ def displayEnemies(lisEnemies):
 
 # what to display when the game is over and the player loses
 def gameOver():
+  pygame.mixer.music.stop()
   messageToScreen('YOU LOSE!, PLAY AGAIN? (Y/N)')
   # the for and if event in while loop takes an event from the player if he/she want's to continue or quit 
+  
+  
   while 1:
     for event in pygame.event.get():
       if event.type == pygame.KEYDOWN:

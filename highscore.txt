@@ -13,3 +13,8 @@ name: sss Score: 0
 name: hh Score: 0
 name: James Score: 0
 name: ssss Score: 4
+name: Hartmann Score: 25
+name: Harti Score: 132
+name: ss Score: 3
+name: yo! Score: 9
+name: James! Score: 11
