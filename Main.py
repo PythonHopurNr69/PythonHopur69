@@ -1,7 +1,10 @@
 import pygame
 import random
 import time
-import scores as HScores
+from tkinter import *
+import tkinter.messagebox
+from score_repo import HighScores
+
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -24,6 +27,8 @@ list_Enemies = []
 shots_moving = []
 list_allowed_space = []
 font = pygame.font.SysFont(None, 25)
+_highscores = HighScores()
+entry = Entry()
 
 def initialize():
   global timer
@@ -47,6 +52,7 @@ def initialize():
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 
 pygame.time.set_timer(pygame.USEREVENT +1, timer)
+  
   
 def maingame():
   initialize()
@@ -108,16 +114,16 @@ def mainMenu():
   gameDisplay.blit(TitleMessage, [600,100],)
 
   TitleMessage = font.render("3 --- HOW TO PLAY", True, red)
-  gameDisplay.blit(TitleMessage, [600,200],)
+  gameDisplay.blit(TitleMessage, [600,500],)
 
   StartMessage = font.render("1 --- StartGame", True, red)
-  gameDisplay.blit(StartMessage, [600,300])
+  gameDisplay.blit(StartMessage, [600,200])
 
   HighScore = font.render("2 --- HighScore", True, red)
-  gameDisplay.blit(HighScore, [600,400])
+  gameDisplay.blit(HighScore, [600,300])
   
   ExitMessage = font.render("q --- Exit program", True, red)
-  gameDisplay.blit(ExitMessage, [600, 500])
+  gameDisplay.blit(ExitMessage, [600, 400])
   pygame.display.update()
   while 1:
     for event in pygame.event.get():
@@ -135,11 +141,51 @@ def how_to_play():
   message = font.render('in this game you play as a black box and your goal is to shoot the red boxes for points',True, red)
   gameDisplay.blit(message,[display_height/4,display_width/2])
 def displayHighScores():
-    highscores = HScores.load()
-    for y, (hi_name, hi_score) in enumerate(highscores):
-        FONT.render_to(screen, (100, y*30+40), f'{hi_name} {hi_score}', BLUE)
-    gameDisplay.fill((30, 30, 50))
+  window = Tk()
+  disp_scores = StringVar()
+  window.title("HighScores")
+  window.configure(background='pink')
+  Frame(width=500, height=500, background='pink').pack()
+  for score in _highscores.get_scores():
+      tmp = disp_scores.get()
+      tmp += '\n' + score
+      disp_scores.set(tmp)
+  the_jokes = Label(textvariable=disp_scores, anchor='w', justify='left', wraplength=500, background='pink')
+  the_jokes.pack()
+  the_jokes.place(y=0)
+  window.mainloop()
+  mainMenu()  
+  
+    
+def saveHighScores():
+  root = Tk()
+  root.geometry("200x100")
+  #textBox=Text(root, height=2, width=10)
+  #inputVal = textBox.get("1.0")
+  #textBox.pack()
+  #global points
+  #buttonCommit = Button(root, height=1, width=1, text="commit",
+                  #command=lambda: _highscores.add_score(inputVal))
+  #buttonCommit.pack()
+  
+  Button(text='Submit name', command=commitHighScores, background='green').pack()
+  entry.pack(fill=X)
+  mainloop()
 
+
+def commitHighScores():
+  disp_scores = StringVar()
+  global points
+  newHighScore = entry.get()
+
+  if newHighScore and _highscores.add_score(newHighScore):
+      tmp = disp_scores.get()
+      tmp += '\n' + newHighScore
+      disp_scores.set(tmp)
+  else:
+      tkinter.messagebox.showinfo('Error, could not add scores')
+
+  
 
 def check_if_hit():
   for i in list_Enemies:
@@ -183,8 +229,10 @@ def gameOver():
           maingame()
           return True
         elif event.key == pygame.K_n:
+          saveHighScores()
           mainMenu()
           return True
+
 
 def messageToScreen(msg):
   message = font.render(msg,True, red)
