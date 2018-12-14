@@ -33,7 +33,8 @@ lvl = 1
 points = 0
 shot_speed = 3.5
 enemy_speed = 2.5
-
+effect = pygame.mixer.Sound('crash.wav')
+pew = pygame.mixer.Sound('pew.wav')
 #our displays, for our game and menu
 menuDisplay = pygame.display.set_mode((display_width,display_height))
 gameDisplay = pygame.display.set_mode((display_width,display_height))
@@ -77,7 +78,7 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 
 #our game loop
 def maingame():
-  
+  pygame.mixer.music.load('lol.wav')
   initialize()
   x_cord = 67
   y_cord = int(display_height - (display_height/10)) 
@@ -112,6 +113,7 @@ def maingame():
         
         elif event.key == pygame.K_SPACE:
           #if the spacebar is pressed a shot will be appended into "shots moveing" containing the x and y coordinates of the shot 
+          pew.play()
           fireShot(x_cord, y_cord, 2)
           shots_moving.append([x_cord, y_cord])
       elif event.type == spawn_enemy:
@@ -137,7 +139,10 @@ def maingame():
       #check if the player is hit
       if i[0] > x_cord and i[0] < x_cord +20 or i[0] + 10 > x_cord and i[0] + 10 < x_cord + 20:
         if i[1] > y_cord and i[1] < y_cord + 20 or i[1]+10 > y_cord and i[1] + 10 < y_cord+ 20:
+          pygame.mixer.music.stop()
+          effect.play()
           gameExit = gameOver()
+          
       #this if is if multiple shots hit the same target the game doesnt crash
       if i[1]> display_height:
         if i in list_Enemies:
@@ -149,7 +154,8 @@ def maingame():
 #our main menu
 def mainMenu():
   # lol.wav -- music made in SonicPi
-  pygame.mixer.music.load('lol.wav')
+  pygame.mixer.music.load('intro.wav')
+  pygame.mixer.music.play(1)
   
   menuDisplay.fill(black)
 
@@ -242,7 +248,6 @@ def displayEnemies(lisEnemies):
 
 # what to display when the game is over and the player loses
 def gameOver():
-  pygame.mixer.music.stop()
   messageToScreen('YOU LOSE!, PLAY AGAIN? (Y/N)')
   # the for and if event in while loop takes an event from the player if he/she want's to continue or quit 
   
