@@ -1,9 +1,7 @@
 import pygame
 import random
 import time
-from tkinter import *
-import tkinter.messagebox
-from score_repo import HighScores
+import score_gui as gui
 
 
 pygame.init()
@@ -19,6 +17,7 @@ spawn_enemy = pygame.USEREVENT  + 1
 timer = 1000
 lvl_up = 20
 lvl = 1
+points = 0
 shot_speed = 3.5
 enemy_speed = 2.5
 menuDisplay = pygame.display.set_mode((display_width,display_height))
@@ -27,8 +26,8 @@ list_Enemies = []
 shots_moving = []
 list_allowed_space = []
 font = pygame.font.SysFont(None, 25)
-_highscores = HighScores()
-entry = Entry()
+#_highscores = HighScores()
+#entry = Entry()
 
 def initialize():
   global timer
@@ -37,6 +36,8 @@ def initialize():
   global enemy_speed
   global lvl 
   global lvl_up
+  global points
+  points = 0
   lvl_up = 20
   lvl = 1 
   timer = 1000
@@ -63,8 +64,6 @@ def maingame():
   list_Enemies.append([enemy_cord_x, enemy_cord_y])
   gameExit = False 
   gameDisplay.fill(white)
-  global points
-  points = 0
   pygame.display.update()
   while gameExit == False:
     for event in pygame.event.get():
@@ -140,54 +139,21 @@ def mainMenu():
 def how_to_play():
   message = font.render('in this game you play as a black box and your goal is to shoot the red boxes for points',True, red)
   gameDisplay.blit(message,[display_height/4,display_width/2])
+
+
+
 def displayHighScores():
-  window = Tk()
-  disp_scores = StringVar()
-  window.title("HighScores")
-  window.configure(background='pink')
-  Frame(width=500, height=500, background='pink').pack()
-  for score in _highscores.get_scores():
-      tmp = disp_scores.get()
-      tmp += '\n' + score
-      disp_scores.set(tmp)
-  the_jokes = Label(textvariable=disp_scores, anchor='w', justify='left', wraplength=500, background='pink')
-  the_jokes.pack()
-  the_jokes.place(y=0)
-  window.mainloop()
+  param = 1
+  global points
+  gui.guiApplicaton(param, points)
   mainMenu()  
   
     
 def saveHighScores():
-  root = Tk()
-  root.geometry("200x100")
-  #textBox=Text(root, height=2, width=10)
-  #inputVal = textBox.get("1.0")
-  #textBox.pack()
-  #global points
-  #buttonCommit = Button(root, height=1, width=1, text="commit",
-                  #command=lambda: _highscores.add_score(inputVal))
-  #buttonCommit.pack()
-  
-  Button(text='Submit name', command=commitHighScores, background='green').pack()
-  entry.pack(fill=X)
-  mainloop()
-
-
-def commitHighScores():
-  disp_scores = StringVar()
+  param = 0
   global points
-  str_point = str(points)
-  newHighScore = entry.get()
-  newHighScore = 'name: ' + newHighScore + ' ' + 'Score: ' + str_point
-
-  if newHighScore and _highscores.add_score(newHighScore):
-      tmp = disp_scores.get()
-      tmp += '\n' + newHighScore
-      disp_scores.set(tmp)
-  else:
-      tkinter.messagebox.showinfo('Error, could not add scores')
-
-  
+  gui.guiApplicaton(param, points)
+  mainMenu()
 
 def check_if_hit():
   for i in list_Enemies:
