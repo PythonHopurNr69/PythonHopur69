@@ -176,7 +176,9 @@ def saveHighScores():
 def commitHighScores():
   disp_scores = StringVar()
   global points
+  str_point = str(points)
   newHighScore = entry.get()
+  newHighScore = 'name: ' + newHighScore + ' ' + 'Score: ' + str_point
 
   if newHighScore and _highscores.add_score(newHighScore):
       tmp = disp_scores.get()
@@ -221,7 +223,7 @@ def displayEnemies(lisEnemies):
         pygame.draw.rect(gameDisplay, red, [i[0], i[1], 20, 20])
 
 def gameOver():
-#  messageToScreen('YOU LOSE!, PLAY AGAIN? (Y/N)')
+  messageToScreen('YOU LOSE!, PLAY AGAIN? (Y/N)')
   while 1:
     for event in pygame.event.get():
       if event.type == pygame.KEYDOWN:
